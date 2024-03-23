@@ -3,5 +3,6 @@
     min-height: 5rem;
     position: relative;
     padding: 1rem;
+    padding-left: 3rem;
     background-color: rgb(227, 236, 255);
 }

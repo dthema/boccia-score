@@ -1,0 +1,10 @@
+<article class="content-group">
+  <h2 class="content-group__title">{{competitionsTitle}}</h2>
+  <div class="content-box">
+    {{#each competitionItems}}
+      <a class="content-box__item content-box__link content-box__item_shadowed" href="{{this.link}}">
+        <span class="content-box__text">{{this.name}}</span>
+      </a>
+    {{/each}}
+  </div>
+</article>

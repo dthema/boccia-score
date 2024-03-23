@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <meta name="keywords" content="бочча,счёт,спорт">
+  <meta name="description" content="Страница с предыдущими соревнованиями по Бочча">
+  {{#each styles}}
+    <link href="{{cssPath}}" rel="stylesheet">
+  {{/each}}
+  {{#each scripts}}
+    <script src="{{jsPath}}"></script>
+  {{/each}}
+  <title>Предыдущие соревнования</title>
+</head>
+<body>
+{{> header}}
+<main class="main">
+  {{> competitions}}
+</main>
+{{> footer}}
+</body>
+</html>

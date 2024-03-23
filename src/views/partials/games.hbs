@@ -1,0 +1,26 @@
+<article class="content-group">
+  <h2 class="content-group__title">{{gamesTitle}}</h2>
+  {{#if showGamesFilter}}
+  <label class="filter-box__label" for="playerFilter">Фильтр по имени игрока:</label>
+  <input class="filter-box__input" type="text" id="playerFilter" name="playerFilter" oninput="filterGames()">
+  {{/if}}
+  <div class="content-box game-box" id="gameList">
+    {{#each gameItems}}
+    <a class="content-box__item content-box__link content-box__item_shadowed game-box__item" href="{{this.link}}">
+      <div class="game-box__players">
+        <span class="game-box__players__player game-box__players__red">{{this.redPlayer.name}}</span>
+        <span class="game-box__players__delimiter"> - </span>
+        <span class="game-box__players__player game-box__players__blue">{{this.bluePlayer.name}}</span>
+      </div>
+      <div class="game-box__scores">
+        <span class="game-box__scores__score game-box__scores__red">{{this.redPlayer.score}}</span>
+        <span class="game-box__scores__delimiter"> : </span>
+        <span class="game-box__scores__score game-box__scores__blue">{{this.bluePlayer.score}}</span>
+      </div>
+      <div class="game-box__round">
+        <span class="game-box__round__number">{{this.round}}</span> энд
+      </div>
+    </a>
+    {{/each}}
+  </div>
+</article>

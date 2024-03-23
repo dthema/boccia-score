@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <meta name="keywords" content="бочча,счёт,спорт">
+  <meta name="description" content="Рейтинг игроков по Бочча">
+  {{#each styles}}
+    <link href="{{cssPath}}" rel="stylesheet">
+  {{/each}}
+  {{#each scripts}}
+    <script src="{{jsPath}}"></script>
+  {{/each}}
+  <title>Рейтинг</title>
+</head>
+<body>
+{{> header}}
+<main class="main">
+  {{> rankingTable}}
+</main>
+{{> footer}}
+</body>
+</html>

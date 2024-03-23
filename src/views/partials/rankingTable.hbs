@@ -1,0 +1,19 @@
+<article class="content-group">
+  <h2 class="content-group__title">Рейтинг игроков</h2>
+  <div class="ranking-grid">
+    <div class="ranking-grid__row ranking-grid__row_header">
+      <span class="ranking-grid__item ranking-grid__item_rank">№</span>
+      <span class="ranking-grid__item ranking-grid__item_name">ФИО</span>
+      <span class="ranking-grid__item ranking-grid__item_score">Очков</span>
+      <span class="ranking-grid__item ranking-grid__item_region">Регион</span>
+    </div>
+    {{#each athletes}}
+    <div class="ranking-grid__row">
+      <span class="ranking-grid__item ranking-grid__item_rank">{{this.rank}}</span>
+      <span class="ranking-grid__item ranking-grid__item_name">{{this.fullName}}</span>
+      <span class="ranking-grid__item ranking-grid__item_score">{{this.score}}</span>
+      <span class="ranking-grid__item ranking-grid__item_region">{{this.region}}</span>
+    </div>
+    {{/each}}
+  </div>
+</article>
