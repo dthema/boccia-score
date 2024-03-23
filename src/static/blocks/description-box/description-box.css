@@ -1,0 +1,17 @@
+@import "__text/description-box__text.css";
+
+.description-box {
+    width: 100%;
+    background-image:
+            linear-gradient(
+                    rgba(0, 0, 0, 0.7),
+                    rgba(0, 0, 0, 0.7)
+            ),
+            url("https://img.kyodonews.net/english/public/images/posts/febd94eb28786258ae11abdda1c14732/photo_l.jpg");
+    background-position-x: center;
+    background-position-y: 80%;
+    background-size: cover;
+    background-repeat: no-repeat;
+    padding: 3rem;
+    text-align: center;
+}

@@ -1,0 +1,17 @@
+.inline-menu__link {
+    display: inline-block;
+    padding: 16px;
+    margin: 8px;
+    text-decoration: none;
+    font-family: "Gill Sans", sans-searif, serif;
+    font-size: 1.5rem;
+    color: black;
+}
+
+.inline-menu__link:hover {
+    color: #141491;
+}
+
+.inline-menu__link.current {
+    border-bottom: 2px solid #141491;
+}

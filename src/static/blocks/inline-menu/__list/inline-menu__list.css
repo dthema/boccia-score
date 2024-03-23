@@ -1,0 +1,13 @@
+.inline-menu__list {
+    display: flex;
+    flex-flow: row nowrap;
+    justify-content: center;
+    align-items: center;
+    list-style: none;
+}
+
+@media all and (max-width: 560px) {
+    .inline-menu__list {
+        flex-direction: column;
+    }
+}

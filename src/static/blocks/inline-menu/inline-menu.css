@@ -1,0 +1,7 @@
+@import "__list/inline-menu__list.css";
+@import "__item/inline-menu__item.css";
+@import "__link/inline-menu__link.css";
+
+.inline-menu {
+    display: block;
+}

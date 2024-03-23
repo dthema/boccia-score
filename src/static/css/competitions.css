@@ -1,0 +1,25 @@
+@import "../blocks/body/body.css";
+@import "../blocks/header/header.css";
+@import "../blocks/main/main.css";
+@import "../blocks/filter-box/filter-box.css";
+@import "../blocks/inline-menu/inline-menu.css";
+@import "../blocks/description-box/description-box.css";
+@import "../blocks/content-group/content-group.css";
+@import "../blocks/content-box/content-box.css";
+@import "../blocks/game-box/game-box.css";
+@import "../blocks/logo/logo.css";
+@import "../blocks/menu-list/menu-list.css";
+@import "../blocks/copyright/copyright.css";
+@import "../blocks/footer/footer.css";
+@import "../blocks/page-load-info/page-load-info.css";
+@import "../blocks/competition-box/competition-box.css";
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+html {
+    height: 100%;
+}

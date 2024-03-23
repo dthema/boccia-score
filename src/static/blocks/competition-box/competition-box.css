@@ -1,0 +1,8 @@
+@import "__item/competition-box__item.css";
+@import "__name/competition-box__name.css";
+@import "__status/competition-box__status.css";
+@import "__date/competition-box__date.css";
+
+.competition-box {
+    font-family: Verdana, serif;
+}

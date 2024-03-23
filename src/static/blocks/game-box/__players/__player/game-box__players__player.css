@@ -1,0 +1,7 @@
+@import "__red/game-box__players__red.css";
+@import "__blue/game-box__players__blue.css";
+
+.game-box__players__player {
+    display: block;
+    flex: 1;
+}

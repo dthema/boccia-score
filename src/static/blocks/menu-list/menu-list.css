@@ -1,0 +1,14 @@
+@import "__item/menu-list__item.css";
+@import "__link/menu-list__link.css";
+
+.menu-list {
+    display: inline-block;
+    margin-left: 2rem;
+    list-style: none;
+}
+
+@media all and (max-width: 550px) {
+    .menu-list {
+        display: none;
+    }
+}

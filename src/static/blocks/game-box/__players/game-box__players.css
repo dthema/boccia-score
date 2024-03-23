@@ -1,0 +1,8 @@
+@import "__player/game-box__players__player.css";
+@import "__delimiter/game-box__players__delimiter.css";
+
+.game-box__players {
+    display: flex;
+    flex-flow: row nowrap;
+    text-align: center;
+}

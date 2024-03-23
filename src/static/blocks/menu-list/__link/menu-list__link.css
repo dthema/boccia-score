@@ -1,0 +1,11 @@
+.menu-list__link {
+    display: inline-block;
+    text-decoration: none;
+    font-family: "Gill Sans", sans-searif, serif;
+    font-size: 1rem;
+    color: black;
+}
+
+.menu-list__link:hover {
+    color: #141491;
+}

@@ -1,0 +1,10 @@
+.ranking-grid__item {
+    border-left: solid 3px;
+    padding: 0.5rem;
+    font-family: "Gill Sans", sans-searif, serif;
+    word-break: break-word;
+}
+
+.ranking-grid__item:last-child {
+    border-right: solid 3px;
+}

@@ -1,0 +1,6 @@
+@import "__item/ranking-grid__item.css";
+@import "__row/ranking-grid__row.css";
+
+.ranking-grid {
+    margin: 1rem;
+}

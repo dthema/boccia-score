@@ -1,0 +1,8 @@
+@import "__item/game-box__item.css";
+@import "__players/game-box__players.css";
+@import "__scores/game-box__scores.css";
+@import "__round/game-box__round.css";
+
+.game-box {
+    font-family: Verdana, serif;
+}

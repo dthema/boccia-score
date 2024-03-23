@@ -1,0 +1,10 @@
+.page-load-info {
+    display: inline-block;
+    position: absolute;
+    bottom: 0;
+    right: 0;
+    margin: 15px 15px 3rem;
+    font-family: Verdana, serif;
+    font-size: 1rem;
+    color: black;
+}

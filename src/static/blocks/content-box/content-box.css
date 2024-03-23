@@ -1,0 +1,7 @@
+@import "__item/content-box__item.css";
+@import "__link/content-box__link.css";
+
+.content-box {
+    display: flex;
+    flex-flow: row wrap;
+}

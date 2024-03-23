@@ -1,0 +1,6 @@
+.competition-box__status {
+    display: block;
+    flex-flow: row nowrap;
+    margin-top: 8px;
+    text-align: center;
+}

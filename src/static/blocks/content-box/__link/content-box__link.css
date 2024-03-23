@@ -1,0 +1,13 @@
+.content-box__link {
+    display: block;
+    width: 100%;
+    padding: 2rem;
+    text-decoration: none;
+    font-family: Verdana, serif;
+    font-size: 1.3rem;
+    color: black;
+}
+
+.content-box__link:hover {
+    color: #141491;
+}

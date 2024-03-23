@@ -1,0 +1,7 @@
+@import "__title/content-group__title.css";
+
+.content-group {
+    width: 100%;
+    margin-top: 1.5rem;
+    padding-inline: 3rem;
+}

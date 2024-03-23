@@ -1,0 +1,5 @@
+.competition-box__name {
+    display: block;
+    flex-flow: row nowrap;
+    text-align: center;
+}

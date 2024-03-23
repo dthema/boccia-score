@@ -1,0 +1,16 @@
+.game-box__scores {
+    display: flex;
+    flex-flow: row nowrap;
+    margin-top: 8px;
+    text-align: center;
+}
+
+.game-box__scores__delimiter {
+    display: block;
+    margin-inline: 10px;
+}
+
+.game-box__scores__score {
+    display: block;
+    flex: 1;
+}
