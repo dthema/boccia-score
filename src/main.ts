@@ -5,7 +5,7 @@ import { NestExpressApplication } from '@nestjs/platform-express';
 
 async function bootstrap() {
   const app = await NestFactory.create<NestExpressApplication>(AppModule);
-  app.useStaticAssets('src\\static');
+  app.useStaticAssets('./src/static');
   const configService = app.get(ConfigService);
   let port = configService.get<number>('PORT');
   if (port == null || port === 0) {

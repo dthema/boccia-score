@@ -11,7 +11,7 @@ export class AppController {
       const query = res.req.url.split('/');
       file = query[query.length - 1];
     }
-    const pathToHtmlFile = join(__dirname, '..', 'src\\static', file);
+    const pathToHtmlFile = join(__dirname, '..', './src/static', file);
     return res.sendFile(pathToHtmlFile);
   }
 }
