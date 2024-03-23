@@ -1,9 +1,9 @@
 {
   "singleQuote": true,
   "trailingComma": "all",
-  "endOfLine": "crlf",
+  "endOfLine": "auto",
   "error":
   {
-    "endOfLine": "crlf"
+    "endOfLine": "auto"
   }
 }
