@@ -1,7 +1,9 @@
-import { Controller, Get, Render } from '@nestjs/common';
+import { Controller, Get, Render, UseInterceptors } from '@nestjs/common';
 import { GameService } from './games/game.service';
 import { CompetitionService } from './competitions/competition.service';
 import { AthleteService } from './athlete/athlete.service';
+import { LoaderInterceptor } from './loader.interceptor';
+import { ApiExcludeController } from '@nestjs/swagger';
 
 const sharedScripts = [{ jsPath: 'js/all-pages.js' }];
 
@@ -14,12 +16,16 @@ const headerMenuItems = [
 
 const footerMenuItems = [
   { text: 'Главная', link: 'index' },
-  { text: 'Панель администратора', link: 'login' },
+  { text: 'Текущие игры', link: 'games' },
+  { text: 'Соревнования', link: 'competitions' },
+  { text: 'Рейтинг', link: 'ranking' },
 ];
 
 const copyright = 'Беглецов Глеб © 2024';
 
 @Controller()
+@UseInterceptors(LoaderInterceptor)
+@ApiExcludeController()
 export class AppController {
   constructor(
     private athleteService: AthleteService,
@@ -36,9 +42,9 @@ export class AppController {
       scripts: sharedScripts,
       headerMenuItems: headerMenuItems,
       competitionsTitle: 'Недавние соревнования',
-      competitionItems: this.competitionService.getMockCompetitions(),
+      competitionItems: await this.competitionService.getAll(),
       gamesTitle: 'Текущие игры',
-      gameItems: await this.gameService.getMockGames(),
+      gameItems: await this.gameService.getAll(),
       footerMenuItems: footerMenuItems,
       copyright: copyright,
     };
@@ -46,14 +52,14 @@ export class AppController {
 
   @Get('competitions')
   @Render('competitions')
-  getCompetitions() {
+  async getCompetitions() {
     const styles = [{ cssPath: 'css/competitions.css' }];
     return {
       styles: styles,
       scripts: sharedScripts,
       headerMenuItems: headerMenuItems,
       competitionsTitle: 'Прошедшие соревнования',
-      competitionItems: this.competitionService.getMockCompetitions(),
+      competitionItems: await this.competitionService.getAll(),
       footerMenuItems: footerMenuItems,
       copyright: copyright,
     };
@@ -69,7 +75,7 @@ export class AppController {
       headerMenuItems: headerMenuItems,
       gamesTitle: 'Текущие игры',
       showGamesFilter: true,
-      gameItems: await this.gameService.getMockGames(),
+      gameItems: await this.gameService.getAll(),
       footerMenuItems: footerMenuItems,
       copyright: copyright,
     };
@@ -83,21 +89,7 @@ export class AppController {
       styles: styles,
       scripts: sharedScripts,
       headerMenuItems: headerMenuItems,
-      athletes: await this.athleteService.getMockAthletes(),
-      footerMenuItems: footerMenuItems,
-      copyright: copyright,
-    };
-  }
-
-  @Get('login')
-  @Render('login')
-  async getLogin() {
-    const styles = [{ cssPath: 'css/ranking.css' }];
-    return {
-      styles: styles,
-      scripts: sharedScripts,
-      headerMenuItems: headerMenuItems,
-      athletes: await this.athleteService.getMockAthletes(),
+      athletes: await this.athleteService.getAll(),
       footerMenuItems: footerMenuItems,
       copyright: copyright,
     };

@@ -1,10 +1,11 @@
 import { Module } from '@nestjs/common';
 import { GameService } from './game.service';
-import { HttpModule } from '@nestjs/axios';
+import { PrismaService } from '../prisma.service';
+import { GameController } from './game.controller';
 
 @Module({
-  imports: [HttpModule],
-  providers: [GameService],
+  providers: [GameService, PrismaService],
   exports: [GameService],
+  controllers: [GameController],
 })
 export class GameModule {}

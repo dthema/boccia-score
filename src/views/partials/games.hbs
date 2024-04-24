@@ -8,14 +8,14 @@
     {{#each gameItems}}
     <a class="content-box__item content-box__link content-box__item_shadowed game-box__item" href="{{this.link}}">
       <div class="game-box__players">
-        <span class="game-box__players__player game-box__players__red">{{this.redPlayer.name}}</span>
+        <span class="game-box__players__player game-box__players__red">{{this.redAthlete.firstName}} {{this.redAthlete.lastName}}</span>
         <span class="game-box__players__delimiter"> - </span>
-        <span class="game-box__players__player game-box__players__blue">{{this.bluePlayer.name}}</span>
+        <span class="game-box__players__player game-box__players__blue">{{this.blueAthlete.firstName}} {{this.blueAthlete.lastName}}</span>
       </div>
       <div class="game-box__scores">
-        <span class="game-box__scores__score game-box__scores__red">{{this.redPlayer.score}}</span>
+        <span class="game-box__scores__score game-box__scores__red">{{this.redScore}}</span>
         <span class="game-box__scores__delimiter"> : </span>
-        <span class="game-box__scores__score game-box__scores__blue">{{this.bluePlayer.score}}</span>
+        <span class="game-box__scores__score game-box__scores__blue">{{this.blueScore}}</span>
       </div>
       <div class="game-box__round">
         <span class="game-box__round__number">{{this.round}}</span> энд

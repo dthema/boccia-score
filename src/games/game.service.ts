@@ -1,50 +1,74 @@
 import { Injectable } from '@nestjs/common';
-import { firstValueFrom } from 'rxjs';
-import { HttpService } from '@nestjs/axios';
-import { Game } from '../models/game';
-import { Player } from '../models/player';
+import { PrismaService } from '../prisma.service';
+import { Prisma } from '@prisma/client';
+import { GameEntity } from './entity/gameEntity';
 
 @Injectable()
 export class GameService {
-  constructor(private httpService: HttpService) {}
+  constructor(private prisma: PrismaService) {}
 
-  async getMockGames() {
-    const response = await firstValueFrom(
-      this.httpService.get('https://dummyjson.com/users'),
-    );
-    const users: [object] = response.data.users;
-    const randomizedUsers = users
-      .sort(() => 0.5 - Math.random())
-      .slice(0, (Math.random() * 4 + 1) * 2);
-    return this.getGames(randomizedUsers);
+  add(data: Prisma.GameCreateInput): Promise<GameEntity> {
+    return this.prisma.game.create({
+      data,
+      include: this.defaultInclude,
+    });
   }
 
-  private getGames(data: any) {
-    const games = [];
-    if (data && Array.isArray(data)) {
-      for (let i = 0; i < data.length - 1; i += 2) {
-        const game = new Game();
-        const redPlayer = new Player();
-        redPlayer.name = this.getPlayerFullName(data[i]);
-        redPlayer.score = this.getPlayerScore(data[i]);
-        const bluePlayer = new Player();
-        bluePlayer.name = this.getPlayerFullName(data[i + 1]);
-        bluePlayer.score = this.getPlayerScore(data[i + 1]);
-        game.round = Math.floor(Math.random() * 4 + 1);
-        game.redPlayer = redPlayer;
-        game.bluePlayer = bluePlayer;
-        games.push(game);
-      }
-    }
-
-    return games;
+  update(params: {
+    id: number;
+    data: Prisma.GameUpdateInput;
+  }): Promise<GameEntity> {
+    const { data, id } = params;
+    return this.prisma.game.update({
+      data,
+      where: {
+        id: id,
+      },
+      include: this.defaultInclude,
+    });
   }
 
-  private getPlayerFullName(player: any): string {
-    return player.firstName + ' ' + player.lastName;
+  delete(id: number): Promise<GameEntity> {
+    return this.prisma.game.delete({
+      where: { id: id },
+      include: this.defaultInclude,
+    });
   }
 
-  private getPlayerScore(player: any): number {
-    return Math.floor(player.weight / (Math.random() * 10 + 10));
+  get(id: number): Promise<GameEntity> {
+    return this.prisma.game.findUniqueOrThrow({
+      where: { id: id },
+      include: this.defaultInclude,
+    });
   }
+
+  getAll(): Promise<GameEntity[]> {
+    return this.prisma.game.findMany({
+      include: this.defaultInclude,
+    });
+  }
+
+  private defaultInclude = {
+    redAthlete: {
+      select: {
+        id: true,
+        firstName: true,
+        lastName: true,
+        patronymicName: true,
+      },
+    },
+    blueAthlete: {
+      select: {
+        id: true,
+        firstName: true,
+        lastName: true,
+        patronymicName: true,
+      },
+    },
+    competition: {
+      select: {
+        id: true,
+      },
+    },
+  };
 }

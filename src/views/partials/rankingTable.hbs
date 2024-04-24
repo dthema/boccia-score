@@ -10,7 +10,7 @@
     {{#each athletes}}
     <div class="ranking-grid__row">
       <span class="ranking-grid__item ranking-grid__item_rank">{{this.rank}}</span>
-      <span class="ranking-grid__item ranking-grid__item_name">{{this.fullName}}</span>
+      <span class="ranking-grid__item ranking-grid__item_name">{{this.lastName}} {{this.firstName}} {{this.patronymicName}}</span>
       <span class="ranking-grid__item ranking-grid__item_score">{{this.score}}</span>
       <span class="ranking-grid__item ranking-grid__item_region">{{this.region}}</span>
     </div>

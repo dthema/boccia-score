@@ -1,10 +1,11 @@
 import { Module } from '@nestjs/common';
-import { HttpModule } from '@nestjs/axios';
 import { CompetitionService } from './competition.service';
+import { CompetitionController } from './competition.controller';
+import { PrismaService } from '../prisma.service';
 
 @Module({
-  imports: [HttpModule],
-  providers: [CompetitionService],
+  providers: [CompetitionService, PrismaService],
   exports: [CompetitionService],
+  controllers: [CompetitionController],
 })
 export class CompetitionModule {}

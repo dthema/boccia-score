@@ -1,10 +1,11 @@
 import { Module } from '@nestjs/common';
 import { AthleteService } from './athlete.service';
-import { HttpModule } from '@nestjs/axios';
+import { PrismaService } from '../prisma.service';
+import { AthleteController } from './athlete.controller';
 
 @Module({
-  imports: [HttpModule],
-  providers: [AthleteService],
+  providers: [AthleteService, PrismaService],
   exports: [AthleteService],
+  controllers: [AthleteController],
 })
 export class AthleteModule {}
