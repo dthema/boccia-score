@@ -1,6 +1,6 @@
 import { $Enums } from '.prisma/client';
 import { ApiProperty } from '@nestjs/swagger';
-import { GameEntity } from '../entity/gameEntity';
+import { GameEntity } from '../entity/game.entity';
 
 export class GameDto {
   constructor({ ...entity }: Partial<GameEntity>) {

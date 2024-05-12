@@ -1,10 +1,10 @@
-import { Controller, Get, Render, UseInterceptors } from '@nestjs/common';
+import { Controller, Get, Render, Res, UseInterceptors } from '@nestjs/common';
 import { GameService } from './games/game.service';
 import { CompetitionService } from './competitions/competition.service';
 import { AthleteService } from './athlete/athlete.service';
 import { LoaderInterceptor } from './loader.interceptor';
 import { ApiExcludeController } from '@nestjs/swagger';
-
+import { Auth } from './auth/auth.decorator';
 const sharedScripts = [{ jsPath: 'js/all-pages.js' }];
 
 const headerMenuItems = [
@@ -16,9 +16,7 @@ const headerMenuItems = [
 
 const footerMenuItems = [
   { text: 'Главная', link: 'index' },
-  { text: 'Текущие игры', link: 'games' },
-  { text: 'Соревнования', link: 'competitions' },
-  { text: 'Рейтинг', link: 'ranking' },
+  { text: 'Панель администратора', link: 'login' },
 ];
 
 const copyright = 'Беглецов Глеб © 2024';
@@ -93,5 +91,34 @@ export class AppController {
       footerMenuItems: footerMenuItems,
       copyright: copyright,
     };
+  }
+
+  @Get('login')
+  @Render('login')
+  @Auth('UNAUTHORISED')
+  async getLogin() {
+    const styles = [{ cssPath: 'css/index.css' }];
+    return {
+      styles: styles,
+      footerMenuItems: footerMenuItems,
+      copyright: copyright,
+    };
+  }
+
+  @Get('admin')
+  @Render('index')
+  @Auth('ADMIN')
+  async getAdmin() {
+    const styles = [{ cssPath: 'css/index.css' }];
+    return {
+      styles: styles,
+      footerMenuItems: footerMenuItems,
+      copyright: copyright,
+    };
+  }
+
+  @Get('/')
+  async get(@Res() res) {
+    return res.redirect('/index');
   }
 }

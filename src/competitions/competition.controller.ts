@@ -10,8 +10,8 @@ import {
 } from '@nestjs/common';
 import { CompetitionService } from './competition.service';
 import { ApiBody, ApiOkResponse, ApiTags } from '@nestjs/swagger';
-import { CompetitionRequestDto } from './dto/competitionRequestDto';
-import { CompetitionResponseDto } from './dto/competitionResponseDto';
+import { CompetitionRequestDto } from './dto/competitionRequest.dto';
+import { CompetitionResponseDto } from './dto/competitionResponse.dto';
 
 @Controller()
 @ApiTags('competition')

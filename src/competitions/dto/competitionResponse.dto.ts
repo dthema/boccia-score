@@ -1,5 +1,5 @@
 import { ApiExtraModels, ApiProperty } from '@nestjs/swagger';
-import { CompetitionEntity } from '../entity/competitionEntity';
+import { CompetitionEntity } from '../entity/competition.entity';
 
 @ApiExtraModels()
 export class CompetitionResponseDto {

@@ -1,7 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { PrismaService } from '../prisma.service';
 import { Prisma } from '@prisma/client';
-import { CompetitionEntity } from './entity/competitionEntity';
+import { CompetitionEntity } from './entity/competition.entity';
 
 @Injectable()
 export class CompetitionService {

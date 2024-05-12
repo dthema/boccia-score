@@ -1,7 +1,4 @@
 document.addEventListener('DOMContentLoaded', function () {
-  let currentPage = window.location.href;
-  let menuLinks = document.querySelectorAll('.inline-menu__link');
-
   let startTime = performance.now();
   window.addEventListener('load', () => {
     let endTime = performance.now();
@@ -11,6 +8,8 @@ document.addEventListener('DOMContentLoaded', function () {
     clientLoadSpan.textContent = loadTime.toFixed(2);
   });
 
+  let currentPage = window.location.href;
+  let menuLinks = document.querySelectorAll('.inline-menu__link');
   menuLinks.forEach(function (link) {
     if (currentPage.includes(link.getAttribute('href'))) {
       link.classList.add('current');

@@ -50,20 +50,8 @@ CREATE TABLE "Game" (
     CONSTRAINT "Game_pkey" PRIMARY KEY ("id")
 );
 
--- CreateTable
-CREATE TABLE "Admin" (
-    "id" SERIAL NOT NULL,
-    "login" TEXT NOT NULL,
-    "password" CHAR(60) NOT NULL,
-
-    CONSTRAINT "Admin_pkey" PRIMARY KEY ("id")
-);
-
 -- CreateIndex
 CREATE UNIQUE INDEX "Competition_name_startDate_endDate_key" ON "Competition"("name", "startDate", "endDate");
-
--- CreateIndex
-CREATE UNIQUE INDEX "Admin_login_key" ON "Admin"("login");
 
 -- AddForeignKey
 ALTER TABLE "AthletesOnCompetition" ADD CONSTRAINT "AthletesOnCompetition_athleteId_fkey" FOREIGN KEY ("athleteId") REFERENCES "Athlete"("id") ON DELETE CASCADE ON UPDATE CASCADE;
