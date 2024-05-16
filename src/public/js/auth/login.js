@@ -13,7 +13,7 @@ loginForm.addEventListener('submit', (e) => {
       return user.getIdToken().then((idToken) => {
         // ttl: 1 day
         document.cookie = `jwt=${idToken}; path=/; max-age=86400`;
-        fetch('/auth', {
+        fetch('/admin', {
           method: 'GET',
           headers: {
             Accept: 'application/json',

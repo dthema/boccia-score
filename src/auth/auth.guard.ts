@@ -12,8 +12,12 @@ export class AuthGuard implements CanActivate {
   async canActivate(context: ExecutionContext): Promise<boolean> {
     const app = this.admin.setup();
 
-    const cookies = context.switchToHttp().getRequest().cookies;
-    const idToken = cookies['jwt'];
+    let idToken = context.switchToHttp().getRequest().headers['authorization'];
+
+    if (idToken == undefined || idToken === '') {
+      const cookies = context.switchToHttp().getRequest().cookies;
+      idToken = cookies['jwt'];
+    }
 
     const permissions = this.reflector.get<string[]>(
       'permissions',

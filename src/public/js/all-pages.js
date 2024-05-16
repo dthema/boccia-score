@@ -59,13 +59,6 @@ document.addEventListener('DOMContentLoaded', function () {
     if (annyang) {
       annyang.setLanguage('ru');
 
-      annyang.addCommands({
-        'открой главную': () => navigateTo('index.html'),
-        'открой текущие игры': () => navigateTo('games.html'),
-        'открой соревнования': () => navigateTo('competitions.html'),
-        'открой рейтинг': () => navigateTo('ranking.html'),
-      });
-
       SpeechKITT.annyang();
       SpeechKITT.setStylesheet(
         'https://cdnjs.cloudflare.com/ajax/libs/SpeechKITT/0.3.0/themes/flat.css',

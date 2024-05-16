@@ -9,12 +9,15 @@ import {
   Put,
 } from '@nestjs/common';
 import { CompetitionService } from './competition.service';
-import { ApiBody, ApiOkResponse, ApiTags } from '@nestjs/swagger';
+import { ApiBearerAuth, ApiBody, ApiOkResponse, ApiTags } from '@nestjs/swagger';
 import { CompetitionRequestDto } from './dto/competitionRequest.dto';
 import { CompetitionResponseDto } from './dto/competitionResponse.dto';
+import { Auth } from '../auth/auth.decorator';
 
 @Controller()
 @ApiTags('competition')
+@Auth('ADMIN')
+@ApiBearerAuth()
 export class CompetitionController {
   constructor(private competitionService: CompetitionService) {}
 

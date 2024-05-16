@@ -9,11 +9,14 @@ import {
   Put,
 } from '@nestjs/common';
 import { AthleteService } from './athlete.service';
-import { ApiBody, ApiOkResponse, ApiTags } from '@nestjs/swagger';
+import { ApiBearerAuth, ApiBody, ApiOkResponse, ApiTags } from '@nestjs/swagger';
 import { AthleteDto } from './dto/athlete.dto';
+import { Auth } from '../auth/auth.decorator';
 
 @Controller()
 @ApiTags('athlete')
+@Auth('ADMIN')
+@ApiBearerAuth()
 export class AthleteController {
   constructor(private athleteService: AthleteService) {}
 
