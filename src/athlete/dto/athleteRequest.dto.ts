@@ -1,14 +1,7 @@
 import { ApiProperty } from '@nestjs/swagger';
 import { $Enums } from '.prisma/client';
 
-export class AthleteDto {
-  constructor({ ...data }: Partial<AthleteDto>) {
-    Object.assign(this, data);
-  }
-
-  @ApiProperty()
-  id: number;
-
+export class AthleteRequestDto {
   @ApiProperty()
   firstName: string;
 

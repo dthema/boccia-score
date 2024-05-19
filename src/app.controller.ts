@@ -17,7 +17,7 @@ const headerMenuItems = [
 const adminHeaderMenuItems = [
   { text: 'Соревнования', link: 'admin-competitions' },
   { text: 'Игры', link: 'admin-games' },
-  { text: 'Игроки', link: 'admin-athletes' },
+  { text: 'Спортсмены', link: 'admin-athletes' },
   { text: 'Выйти', link: 'admin-signout' },
 ];
 
@@ -116,11 +116,29 @@ export class AppController {
   @Render('admin_competitions')
   @Auth('ADMIN')
   async getAdminCompetitions() {
-    const styles = [{ cssPath: 'css/index.css' }];
+    const styles = [{ cssPath: 'css/admin.css' }];
     return {
       styles: styles,
       scripts: sharedScripts,
       headerMenuItems: adminHeaderMenuItems,
+      competitions: await this.competitionService.getAll(),
+      athletes: await this.athleteService.getAll(),
+      footerMenuItems: footerMenuItems,
+      copyright: copyright,
+    };
+  }
+
+  @Get('admin-athletes')
+  @Render('admin_athletes')
+  @Auth('ADMIN')
+  async getAdminAthletes() {
+    const styles = [{ cssPath: 'css/admin.css' }];
+    return {
+      styles: styles,
+      scripts: sharedScripts,
+      headerMenuItems: adminHeaderMenuItems,
+      competitions: await this.competitionService.getAll(),
+      athletes: await this.athleteService.getAll(),
       footerMenuItems: footerMenuItems,
       copyright: copyright,
     };

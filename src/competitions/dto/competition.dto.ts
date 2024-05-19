@@ -2,7 +2,7 @@ import { ApiExtraModels, ApiProperty } from '@nestjs/swagger';
 import { CompetitionEntity } from '../entity/competition.entity';
 
 @ApiExtraModels()
-export class CompetitionResponseDto {
+export class CompetitionDto {
   constructor({ ...entity }: Partial<CompetitionEntity>) {
     const keys = ['athletes', 'games'];
     Object.assign(
@@ -19,6 +19,9 @@ export class CompetitionResponseDto {
       this.gameIds = entity.games.map((x) => x.id);
     }
   }
+
+  @ApiProperty()
+  id: string;
 
   @ApiProperty()
   name: string;

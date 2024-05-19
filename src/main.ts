@@ -7,6 +7,57 @@ import * as hbs from 'hbs';
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
 import { ValidationPipe } from '@nestjs/common';
 import * as cookieParser from 'cookie-parser';
+import { AthleteDto } from './athlete/dto/athlete.dto';
+
+function athleteFullNameString(athlete: AthleteDto) {
+  if (athlete == undefined) return '';
+  return (
+    athlete.lastName + ' ' + athlete.firstName + ' ' + athlete.patronymicName
+  );
+}
+
+function initHbsHelpers() {
+  hbs.registerHelper(
+    'parseParticipiants',
+    function (athleteIds: number[], athletes: AthleteDto[]) {
+      let response = '';
+
+      if (athleteIds != undefined && athletes != undefined) {
+        const ids = new Set<number>();
+        athleteIds.forEach((id: number) => {
+          ids.add(id);
+        });
+
+        athletes.forEach((athlete: AthleteDto) => {
+          if (ids.has(athlete.id)) {
+            response += '<span>' + athleteFullNameString(athlete) + '</span>';
+          }
+        });
+      }
+
+      return response;
+    },
+  );
+
+  hbs.registerHelper('parseAthleteName', function (athlete: AthleteDto) {
+    return athleteFullNameString(athlete);
+  });
+
+  hbs.registerHelper('formatDate', function (date: Date) {
+    return (
+      date.getFullYear() +
+      '-' +
+      fillZero(date.getMonth() + 1) +
+      '-' +
+      fillZero(date.getDate())
+    );
+  });
+}
+
+function fillZero(num) {
+  if (num < 10) return '0' + num;
+  return num;
+}
 
 async function bootstrap() {
   const app = await NestFactory.create<NestExpressApplication>(AppModule, {
@@ -24,6 +75,7 @@ async function bootstrap() {
 
   app.setViewEngine('hbs');
   hbs.registerPartials(join(__dirname, '..', 'src/views/partials'));
+  initHbsHelpers();
 
   const config = new DocumentBuilder()
     .setDescription('API description')

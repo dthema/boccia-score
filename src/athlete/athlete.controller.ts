@@ -9,8 +9,14 @@ import {
   Put,
 } from '@nestjs/common';
 import { AthleteService } from './athlete.service';
-import { ApiBearerAuth, ApiBody, ApiOkResponse, ApiTags } from '@nestjs/swagger';
+import {
+  ApiBearerAuth,
+  ApiBody,
+  ApiOkResponse,
+  ApiTags,
+} from '@nestjs/swagger';
 import { AthleteDto } from './dto/athlete.dto';
+import { AthleteRequestDto } from './dto/athleteRequest.dto';
 import { Auth } from '../auth/auth.decorator';
 
 @Controller()
@@ -36,17 +42,19 @@ export class AthleteController {
 
   @Post('athlete')
   @ApiOkResponse({ type: AthleteDto })
-  @ApiBody({ type: AthleteDto })
-  async addAthlete(@Body() athleteData: AthleteDto): Promise<AthleteDto> {
+  @ApiBody({ type: AthleteRequestDto })
+  async addAthlete(
+    @Body() athleteData: AthleteRequestDto,
+  ): Promise<AthleteDto> {
     return this.athleteService.add(athleteData);
   }
 
   @Put('athlete/:id')
   @ApiOkResponse({ type: AthleteDto })
-  @ApiBody({ type: AthleteDto })
+  @ApiBody({ type: AthleteRequestDto })
   async updateAthlete(
     @Param('id', ParseIntPipe) id: number,
-    @Body() athleteData: AthleteDto,
+    @Body() athleteData: AthleteRequestDto,
   ): Promise<AthleteDto> {
     return this.athleteService.update({
       id,

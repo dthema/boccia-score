@@ -9,9 +9,15 @@ import {
   Put,
 } from '@nestjs/common';
 import { GameService } from './game.service';
-import { ApiBearerAuth, ApiBody, ApiOkResponse, ApiTags } from '@nestjs/swagger';
+import {
+  ApiBearerAuth,
+  ApiBody,
+  ApiOkResponse,
+  ApiTags,
+} from '@nestjs/swagger';
 import { GameDto } from './dto/game.dto';
 import { Auth } from '../auth/auth.decorator';
+import { GameRequestDto } from './dto/gameRequest.dto';
 
 @Controller()
 @ApiTags('game')
@@ -34,8 +40,8 @@ export class GameController {
 
   @Post('game')
   @ApiOkResponse({ type: GameDto })
-  @ApiBody({ type: GameDto })
-  async addGame(@Body() gameData: GameDto): Promise<GameDto> {
+  @ApiBody({ type: GameRequestDto })
+  async addGame(@Body() gameData: GameRequestDto): Promise<GameDto> {
     return new GameDto(
       await this.gameService.add(this.getDataFromDto(gameData)),
     );
@@ -43,10 +49,10 @@ export class GameController {
 
   @Put('game/:id')
   @ApiOkResponse({ type: GameDto })
-  @ApiBody({ type: GameDto })
+  @ApiBody({ type: GameRequestDto })
   async updateGame(
     @Param('id', ParseIntPipe) id: number,
-    @Body() gameData: GameDto,
+    @Body() gameData: GameRequestDto,
   ): Promise<GameDto> {
     return new GameDto(
       await this.gameService.update({
@@ -62,7 +68,7 @@ export class GameController {
     return new GameDto(await this.gameService.delete(id));
   }
 
-  private getDataFromDto(gameData: GameDto) {
+  private getDataFromDto(gameData: GameRequestDto) {
     return {
       class: gameData.class,
       status: gameData.status,

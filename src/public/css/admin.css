@@ -1,0 +1,218 @@
+@import "../blocks/body/body.css";
+@import "../blocks/header/header.css";
+@import "../blocks/main/main.css";
+@import "../blocks/filter-box/filter-box.css";
+@import "../blocks/inline-menu/inline-menu.css";
+@import "../blocks/content-group/content-group.css";
+@import "../blocks/ranking-grid/ranking-grid.css";
+@import "../blocks/logo/logo.css";
+@import "../blocks/menu-list/menu-list.css";
+@import "../blocks/copyright/copyright.css";
+@import "../blocks/footer/footer.css";
+@import "../blocks/page-load-info/page-load-info.css";
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+html {
+    height: 100%;
+}
+
+/* edit-page */
+.edit-page {
+    font-family: Arial, sans-serif;
+    background-color: #f4f4f9;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+/* button-container */
+.button-container {
+    margin: 20px 0;
+}
+
+.button {
+    margin: 0 10px;
+    padding: 10px 20px;
+    font-size: 16px;
+    cursor: pointer;
+    border: none;
+    border-radius: 5px;
+    color: #fff;
+}
+
+.button--add {
+    background-color: #28a745;
+}
+
+.button--edit {
+    background-color: #ffc107;
+}
+
+.button--delete {
+    background-color: #dc3545;
+}
+
+.button--submit {
+    background-color: #28a745;
+}
+
+.button--cancel {
+    background-color: #dc3545;
+}
+
+/* table */
+.table {
+    border-collapse: collapse;
+    width: 80%;
+    margin-bottom: 20px;
+}
+
+.table__header {
+    background-color: #f2f2f2;
+}
+
+.table__row {
+    border: 1px solid #dddddd;
+}
+
+.table__cell {
+    text-align: left;
+    padding: 8px;
+    vertical-align: top;
+}
+
+.table__cell--participants {
+    max-height: 100px;
+    overflow-y: auto;
+    display: block;
+}
+
+.table__cell--participants span {
+    display: block;
+}
+
+/* modal */
+.modal {
+    display: none;
+    position: fixed;
+    z-index: 1;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    overflow: auto;
+    background-color: rgb(0,0,0);
+    background-color: rgba(0,0,0,0.4);
+    justify-content: center;
+    align-items: center;
+}
+
+.modal__content {
+    background-color: #fff;
+    margin: 15% auto;
+    padding: 20px;
+    border: 1px solid #888;
+    width: 80%;
+    max-width: 500px;
+    border-radius: 5px;
+}
+
+.modal__title {
+    margin-bottom: 15px;
+}
+
+.modal__label {
+    display: block;
+    margin: 10px 0 5px;
+}
+
+.modal__input,
+.modal__select {
+    width: 100%;
+    padding: 10px;
+    margin: 10px 0;
+    box-sizing: border-box;
+}
+
+.modal__checkbox-group {
+    display: flex;
+    flex-direction: column;
+    height: 100px;
+    overflow-y: scroll;
+    border: 1px solid #ddd;
+    padding: 10px;
+    border-radius: 5px;
+}
+
+.modal__checkbox-label {
+    margin: 5px 0;
+    display: flex;
+    align-items: center;
+}
+
+.modal__checkbox-label input[type="checkbox"] {
+    display: none;
+}
+
+.modal__checkbox-label input[type="checkbox"] + span {
+    display: inline-block;
+    width: 16px;
+    height: 16px;
+    border: 2px solid #28a745;
+    border-radius: 3px;
+    margin-right: 10px;
+    vertical-align: middle;
+    position: relative;
+}
+
+.modal__checkbox-label input[type="checkbox"]:checked + span::before {
+    content: '';
+    position: absolute;
+    top: 2px;
+    left: 5px;
+    width: 5px;
+    height: 10px;
+    border: solid #28a745;
+    border-width: 0 2px 2px 0;
+    transform: rotate(45deg);
+}
+
+.modal__checkbox {
+    margin: 15px 0;
+    display: flex;
+    align-items: center;
+}
+
+.modal__checkbox input[type="checkbox"] {
+    display: none;
+}
+
+.modal__checkbox input[type="checkbox"] + span {
+    display: inline-block;
+    width: 16px;
+    height: 16px;
+    border: 2px solid #28a745;
+    border-radius: 3px;
+    margin-right: 10px;
+    vertical-align: middle;
+    position: relative;
+}
+
+.modal__checkbox input[type="checkbox"]:checked + span::before {
+    content: '';
+    position: absolute;
+    top: 2px;
+    left: 5px;
+    width: 5px;
+    height: 10px;
+    border: solid #28a745;
+    border-width: 0 2px 2px 0;
+    transform: rotate(45deg);
+}

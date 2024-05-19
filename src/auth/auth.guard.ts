@@ -17,6 +17,8 @@ export class AuthGuard implements CanActivate {
     if (idToken == undefined || idToken === '') {
       const cookies = context.switchToHttp().getRequest().cookies;
       idToken = cookies['jwt'];
+    } else if (idToken.startsWith('Bearer ')) {
+      idToken = idToken.split('Bearer ')[1];
     }
 
     const permissions = this.reflector.get<string[]>(
@@ -26,24 +28,34 @@ export class AuthGuard implements CanActivate {
 
     const response = context.switchToHttp().getResponse();
     if (idToken == undefined) {
-      if (permissions[0] === 'UNAUTHORISED') {
+      if (permissions == undefined || permissions[0] === 'UNAUTHORISED') {
         return true;
       }
       response.redirect('/login');
+      return false;
     }
 
     try {
       const claims = await app.auth().verifyIdToken(idToken);
 
-      if (permissions[0] === 'UNAUTHORISED' && claims.role === 'ADMIN') {
+      if (
+        permissions != undefined &&
+        permissions[0] === 'UNAUTHORISED' &&
+        claims.role === 'ADMIN'
+      ) {
         response.redirect('/admin');
+        return true;
       }
 
-      return claims.role === permissions[0];
+      return (
+        (claims.role == 'ADMIN' && permissions == undefined) ||
+        claims.role === permissions[0]
+      );
     } catch (error) {
       console.log(error.message);
       context.switchToHttp().getResponse().clearCookie('jwt', { path: '/' });
       response.redirect('/login');
+      return false;
     }
   }
 }

@@ -1,0 +1,241 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  {{#each styles}}
+    <link href="{{cssPath}}" rel="stylesheet">
+  {{/each}}
+  {{#each scripts}}
+    <script src="{{jsPath}}"></script>
+  {{/each}}
+  <title>Управление спортсменами</title>
+</head>
+<body>
+{{> header}}
+<main class="main edit-page">
+  <div class="button-container">
+    <button class="button button--add" onclick="openModal('addModal')">Добавить</button>
+    <button class="button button--edit" onclick="openModal('editModal')">Изменить</button>
+    <button class="button button--delete" onclick="openModal('deleteModal')">Удалить</button>
+  </div>
+  <table class="table">
+    <thead class="table__header">
+    <tr class="table__row">
+      <th class="table__cell">Имя</th>
+      <th class="table__cell">Фамилия</th>
+      <th class="table__cell">Отчество</th>
+      <th class="table__cell">Класс</th>
+      <th class="table__cell">Очки</th>
+      <th class="table__cell">Регион</th>
+    </tr>
+    </thead>
+    <tbody class="table__body" id="athleteTableBody">
+    {{#each athletes}}
+      <tr class="table__row">
+        <td class="table__cell">{{this.firstName}}</td>
+        <td class="table__cell">{{this.lastName}}</td>
+        <td class="table__cell">{{this.patronymicName}}</td>
+        <td class="table__cell">{{this.class}}</td>
+        <td class="table__cell">{{this.score}}</td>
+        <td class="table__cell">{{this.region}}</td>
+      </tr>
+    {{/each}}
+    </tbody>
+  </table>
+
+  <div id="addModal" class="modal">
+    <div class="modal__content">
+      <h2 class="modal__title">Добавить спортсмена</h2>
+      <label class="modal__label" for="addFirstName">Имя</label>
+      <input class="modal__input" type="text" id="addFirstName" name="firstName">
+      <label class="modal__label" for="addLastName">Фамилия</label>
+      <input class="modal__input" type="text" id="addLastName" name="lastName">
+      <label class="modal__label" for="addPatronymicName">Отчество</label>
+      <input class="modal__input" type="text" id="addPatronymicName" name="patronymicName">
+      <label class="modal__label" for="addClass">Класс</label>
+      <select class="modal__select" id="addClass" name="class">
+        <option value="BC1">BC1</option>
+        <option value="BC2">BC2</option>
+        <option value="BC3">BC3</option>
+        <option value="BC4">BC4</option>
+      </select>
+      <label class="modal__label" for="addScore">Очки</label>
+      <input class="modal__input" type="number" id="addScore" name="score">
+      <label class="modal__label" for="addRegion">Регион</label>
+      <input class="modal__input" type="text" id="addRegion" name="region">
+      <button class="button button--submit" onclick="addAthlete()">Добавить</button>
+      <button class="button button--cancel" onclick="closeModal('addModal')">Отмена</button>
+    </div>
+  </div>
+
+  <div id="editModal" class="modal">
+    <div class="modal__content">
+      <h2 class="modal__title">Изменить спортсмена</h2>
+      <label class="modal__label" for="editAthlete">Выберите спортсмена</label>
+      <select class="modal__select" id="editAthlete" name="athlete" onchange="populateEditForm()" on>
+        {{#each athletes}}
+          <option value="{{this.id}}"
+                  data-first-name="{{this.firstName}}"
+                  data-last-name="{{this.lastName}}"
+                  data-patronymic-name="{{this.patronymicName}}"
+                  data-region="{{this.region}}"
+                  data-class="{{this.class}}"
+                  data-score="{{this.score}}">
+            {{parseAthleteName this}}, {{this.class}}, {{this.regiom}}
+          </option>
+        {{/each}}
+      </select>
+      <label class="modal__label" for="editFirstName">Имя</label>
+      <input class="modal__input" type="text" id="editFirstName" name="firstName">
+      <label class="modal__label" for="editLastName">Фамилия</label>
+      <input class="modal__input" type="text" id="editLastName" name="lastName">
+      <label class="modal__label" for="editPatronymicName">Отчество</label>
+      <input class="modal__input" type="text" id="editPatronymicName" name="patronymicName">
+      <label class="modal__label" for="editClass">Класс</label>
+      <select class="modal__select" id="editClass" name="class">
+        <option value="BC1">BC1</option>
+        <option value="BC2">BC2</option>
+        <option value="BC3">BC3</option>
+        <option value="BC4">BC4</option>
+      </select>
+      <label class="modal__label" for="editScore">Очки</label>
+      <input class="modal__input" type="number" id="editScore" name="score">
+      <label class="modal__label" for="editRegion">Регион</label>
+      <input class="modal__input" type="text" id="editRegion" name="region">
+      <button class="button button--submit" onclick="editAthlete()">Изменить</button>
+      <button class="button button--cancel" onclick="closeModal('editModal')">Отмена</button>
+    </div>
+  </div>
+
+  <div id="deleteModal" class="modal">
+    <div class="modal__content">
+      <h2 class="modal__title">Удалить спортсмена</h2>
+      <label class="modal__label" for="deleteAthlete">Выберите спортсмена</label>
+      <select class="modal__select" id="deleteAthlete" name="athlete">
+        {{#each athletes}}
+          <option value="{{this.id}}" data-id="{{this.id}}">{{parseAthleteName this}}, {{this.class}}, {{this.regiom}}</option>
+        {{/each}}
+      </select>
+      <button class="button button--submit" onclick="deleteAthlete()">Удалить</button>
+      <button class="button button--cancel" onclick="closeModal('deleteModal')">Отмена</button>
+    </div>
+  </div>
+
+  <script>
+    function openModal(modalId) {
+      document.getElementById(modalId).style.display = "flex";
+      populateEditForm()
+    }
+
+    function closeModal(modalId) {
+      document.getElementById(modalId).style.display = "none";
+    }
+
+    async function addAthlete() {
+      const firstName = document.getElementById('addFirstName').value;
+      const lastName = document.getElementById('addLastName').value;
+      const patronymicName = document.getElementById('addPatronymicName').value || null;
+      const region = document.getElementById('addRegion').value;
+      const athleteClass = document.getElementById('addClass').value;
+      const score = parseFloat(document.getElementById('addScore').value) || null;
+
+      const athlete = {
+        firstName,
+        lastName,
+        patronymicName,
+        region,
+        class: athleteClass,
+        score
+      };
+
+      const response = await fetch('/athlete', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(athlete)
+      });
+
+      if (response.ok) {
+        alert('Спортсмен добавлен успешно');
+        location.reload();
+      } else {
+        alert('Ошибка при добавлении спортсмена');
+      }
+    }
+
+    async function editAthlete() {
+      const athleteSelect = document.getElementById('editAthlete');
+      const athleteId = athleteSelect.value;
+      const firstName = document.getElementById('editFirstName').value;
+      const lastName = document.getElementById('editLastName').value;
+      const patronymicName = document.getElementById('editPatronymicName').value || null;
+      const region = document.getElementById('editRegion').value;
+      const athleteClass = document.getElementById('editClass').value;
+      const score = parseFloat(document.getElementById('editScore').value) || null;
+
+      const athlete = {
+        firstName,
+        lastName,
+        patronymicName,
+        region,
+        class: athleteClass,
+        score
+      };
+
+      const response = await fetch(`/athlete/${athleteId}`, {
+        method: 'PUT',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(athlete)
+      });
+
+      if (response.ok) {
+        alert('Спортсмен изменен успешно');
+        location.reload();
+      } else {
+        alert('Ошибка при изменении спортсмена');
+      }
+    }
+
+    async function deleteAthlete() {
+      const athleteSelect = document.getElementById('deleteAthlete');
+      const athleteId = athleteSelect.value;
+
+      const response = await fetch(`/athlete/${athleteId}`, {
+        method: 'DELETE'
+      });
+
+      if (response.ok) {
+        alert('Спортсмен удален успешно');
+        location.reload();
+      } else {
+        alert('Ошибка при удалении спортсмена');
+      }
+    }
+
+    function populateEditForm() {
+      const athleteSelect = document.getElementById('editAthlete');
+      const selectedOption = athleteSelect.options[athleteSelect.selectedIndex];
+
+      document.getElementById('editFirstName').value = selectedOption.getAttribute('data-first-name');
+      document.getElementById('editLastName').value = selectedOption.getAttribute('data-last-name');
+      document.getElementById('editClass').value = selectedOption.getAttribute('data-class');
+      document.getElementById('editScore').value = selectedOption.getAttribute('data-score');
+
+      const patronymicName = selectedOption.getAttribute('data-patronymic-name');
+      if (patronymicName !== undefined) {
+        document.getElementById('editPatronymicName').value = patronymicName;
+      }
+
+      const region = selectedOption.getAttribute('data-region');
+      if (region !== undefined) {
+        document.getElementById('editRegion').value = region;
+      }
+    }
+  </script>
+</main>
+{{> footer}}
+</body>
+</html>

@@ -9,53 +9,61 @@ import {
   Put,
 } from '@nestjs/common';
 import { CompetitionService } from './competition.service';
-import { ApiBearerAuth, ApiBody, ApiOkResponse, ApiTags } from '@nestjs/swagger';
+import {
+  ApiBearerAuth,
+  ApiBody,
+  ApiOkResponse,
+  ApiTags,
+} from '@nestjs/swagger';
 import { CompetitionRequestDto } from './dto/competitionRequest.dto';
-import { CompetitionResponseDto } from './dto/competitionResponse.dto';
+import { CompetitionDto } from './dto/competition.dto';
 import { Auth } from '../auth/auth.decorator';
 
 @Controller()
 @ApiTags('competition')
-@Auth('ADMIN')
 @ApiBearerAuth()
 export class CompetitionController {
   constructor(private competitionService: CompetitionService) {}
 
   @Get('competition/all')
-  @ApiOkResponse({ type: [CompetitionResponseDto] })
-  async getAllCompetitions(): Promise<CompetitionResponseDto[]> {
+  @ApiOkResponse({ type: [CompetitionDto] })
+  @Auth('ADMIN')
+  async getAllCompetitions(): Promise<CompetitionDto[]> {
     return (await this.competitionService.getAll()).map(
-      (x) => new CompetitionResponseDto(x),
+      (x) => new CompetitionDto(x),
     );
   }
 
   @Get('competition/:id')
-  @ApiOkResponse({ type: CompetitionResponseDto })
+  @ApiOkResponse({ type: CompetitionDto })
+  @Auth('ADMIN')
   async getCompetitionById(
     @Param('id', ParseIntPipe) id: number,
-  ): Promise<CompetitionResponseDto> {
-    return new CompetitionResponseDto(await this.competitionService.get(id));
+  ): Promise<CompetitionDto> {
+    return new CompetitionDto(await this.competitionService.get(id));
   }
 
   @Post('competition')
-  @ApiOkResponse({ type: CompetitionResponseDto })
+  @ApiOkResponse({ type: CompetitionDto })
   @ApiBody({ type: CompetitionRequestDto })
+  @Auth('ADMIN')
   async addCompetition(
     @Body() competitionData: CompetitionRequestDto,
-  ): Promise<CompetitionResponseDto> {
-    return new CompetitionResponseDto(
+  ): Promise<CompetitionDto> {
+    return new CompetitionDto(
       await this.competitionService.add(this.getDataFromDto(competitionData)),
     );
   }
 
   @Put('competition/:id')
-  @ApiOkResponse({ type: CompetitionResponseDto })
+  @ApiOkResponse({ type: CompetitionDto })
   @ApiBody({ type: CompetitionRequestDto })
+  @Auth('ADMIN')
   async updateCompetition(
     @Param('id', ParseIntPipe) id: number,
     @Body() competitionData: CompetitionRequestDto,
-  ): Promise<CompetitionResponseDto> {
-    return new CompetitionResponseDto(
+  ): Promise<CompetitionDto> {
+    return new CompetitionDto(
       await this.competitionService.update({
         id,
         data: this.getDataFromDto(competitionData),
@@ -64,11 +72,12 @@ export class CompetitionController {
   }
 
   @Delete('competition/:id')
-  @ApiOkResponse({ type: CompetitionResponseDto })
+  @ApiOkResponse({ type: CompetitionDto })
+  @Auth('ADMIN')
   async deleteCompetition(
     @Param('id', ParseIntPipe) id: number,
-  ): Promise<CompetitionResponseDto> {
-    return new CompetitionResponseDto(await this.competitionService.delete(id));
+  ): Promise<CompetitionDto> {
+    return new CompetitionDto(await this.competitionService.delete(id));
   }
 
   private getDataFromDto(competitionData: CompetitionRequestDto) {

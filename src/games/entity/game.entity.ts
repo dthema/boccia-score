@@ -5,6 +5,7 @@ export class GameEntity {
     Object.assign(this, data);
   }
 
+  id: number;
   class: $Enums.AthleteClass;
   status?: $Enums.GameStatus;
   redScore?: number;

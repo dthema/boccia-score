@@ -3,6 +3,7 @@ export class CompetitionEntity {
     Object.assign(this, data);
   }
 
+  id: number;
   name: string;
   startDate: Date;
   endDate: Date;

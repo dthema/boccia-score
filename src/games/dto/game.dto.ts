@@ -23,6 +23,9 @@ export class GameDto {
     }
   }
 
+  @ApiProperty()
+  id: number;
+
   @ApiProperty({ enum: $Enums.AthleteClass })
   class: $Enums.AthleteClass;
 

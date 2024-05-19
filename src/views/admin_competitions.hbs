@@ -2,28 +2,221 @@
 <html lang="ru">
 <head>
   <meta charset="UTF-8">
-  <meta name="keywords" content="бочча,счёт,спорт">
-  <meta name="description"
-        content="Сайт для отображения актуальной информации об играх всероссийских и региональных соревнований по Бочча">
   {{#each styles}}
     <link href="{{cssPath}}" rel="stylesheet">
   {{/each}}
   {{#each scripts}}
     <script src="{{jsPath}}"></script>
   {{/each}}
-  <title>Boccia score</title>
+  <title>Управление соревнованиями</title>
 </head>
 <body>
 {{> header}}
-<main class="main">
-  <article class="description-box">
-    <p class="description-box__text">
-      <strong>Boccia Score</strong> - это сервис, предоставляющий доступ к результатам
-      предыдущих соревнований по Бочча, а также к информации по играм в режиме реального времени
-    </p>
-  </article>
-  {{> competitions}}
-  {{> games}}
+<main class="main edit-page">
+  <div class="button-container">
+    <button class="button button--add" onclick="openModal('addModal')">Добавить</button>
+    <button class="button button--edit" onclick="openModal('editModal')">Изменить</button>
+    <button class="button button--delete" onclick="openModal('deleteModal')">Удалить</button>
+  </div>
+  <table class="table">
+    <thead class="table__header">
+    <tr class="table__row">
+      <th class="table__cell">Название</th>
+      <th class="table__cell">Дата открытия</th>
+      <th class="table__cell">Дата закрытия</th>
+      <th class="table__cell">Список участников</th>
+    </tr>
+    </thead>
+    <tbody class="table__body" id="competitionTableBody">
+    {{#each competitions}}
+    <tr class="table__row">
+      <td class="table__cell">{{this.name}}</td>
+      <td class="table__cell">{{formatDate this.startDate}}</td>
+      <td class="table__cell">{{formatDate this.endDate}}</td>
+      <td class="table__cell table__cell--participants">{{parseParticipiants this.athleteIds athletes}}</td>
+    </tr>
+    {{/each}}
+    </tbody>
+  </table>
+
+  <div id="addModal" class="modal">
+    <div class="modal__content">
+      <h2 class="modal__title">Добавить соревнование</h2>
+      <label class="modal__label" for="addName">Название</label>
+      <input class="modal__input" type="text" id="addName" name="name">
+      <label class="modal__label" for="addStartDate">Дата начала</label>
+      <input class="modal__input" type="date" id="addStartDate" name="startDate">
+      <label class="modal__label" for="addEndDate">Дата закрытия</label>
+      <input class="modal__input" type="date" id="addEndDate" name="endDate">
+      <label class="modal__label">Список участников</label>
+      <div class="modal__checkbox-group" id="addParticipants">
+      {{#each athletes}}
+        <label class="modal__checkbox-label"><input type="checkbox" id="addParticipant{{this.id}}" value="{{this.id}}"><span></span> {{parseAthleteName this}}</label>
+      {{/each}}
+      </div>
+      <button class="button button--submit" onclick="addCompetition()">Добавить</button>
+      <button class="button button--cancel" onclick="closeModal('addModal')">Отмена</button>
+    </div>
+  </div>
+
+  <div id="editModal" class="modal">
+    <div class="modal__content">
+      <h2 class="modal__title">Изменить соревнование</h2>
+      <label class="modal__label" for="editName">Выберите соревнование</label>
+      <select class="modal__select" id="editName" name="name" onchange="populateEditForm()" onload="populateEditForm()">
+        {{#each competitions}}
+          <option value="{{this.name}}"
+                  data-id="{{this.id}}"
+                  data-start-date="{{this.startDate}}"
+                  data-end-date="{{this.endDate}}"
+                  data-athlete-ids="{{this.athleteIds}}">
+            {{this.name}}, с {{formatDate this.startDate}} по {{formatDate this.endDate}}
+          </option>
+        {{/each}}
+      </select>
+      <label class="modal__label" for="editNewName">Название</label>
+      <input class="modal__input" type="text" id="editNewName" name="name">
+      <label class="modal__label" for="editStartDate">Дата начала</label>
+      <input class="modal__input" type="date" id="editStartDate" name="startDate">
+      <label class="modal__label" for="editEndDate">Дата закрытия</label>
+      <input class="modal__input" type="date" id="editEndDate" name="endDate">
+      <label class="modal__label">Список участников</label>
+      <div class="modal__checkbox-group" id="editParticipants">
+        {{#each athletes}}
+          <label class="modal__checkbox-label"><input type="checkbox" id="addParticipant{{this.id}}" value="{{this.id}}"><span></span> {{parseAthleteName this}}</label>
+        {{/each}}
+      </div>
+      <button class="button button--submit" onclick="editCompetition()">Изменить</button>
+      <button class="button button--cancel" onclick="closeModal('editModal')">Отмена</button>
+    </div>
+  </div>
+
+  <div id="deleteModal" class="modal">
+    <div class="modal__content">
+      <h2 class="modal__title">Удалить соревнование</h2>
+      <label class="modal__label" for="deleteName">Выберите соревнование</label>
+      <select class="modal__select" id="deleteName" name="name">
+        {{#each competitions}}
+          <option value="{{this.id}}">{{this.name}}, с {{formatDate this.startDate}} по {{formatDate this.endDate}}</option>
+        {{/each}}
+      </select>
+      <button class="button button--submit" onclick="deleteCompetition()">Удалить</button>
+      <button class="button button--cancel" onclick="closeModal('deleteModal')">Отмена</button>
+    </div>
+  </div>
+
+  <script>
+    function openModal(modalId) {
+      document.getElementById(modalId).style.display = "flex";
+    }
+
+    function closeModal(modalId) {
+      document.getElementById(modalId).style.display = "none";
+    }
+
+    function formatDateToISO(dateString) {
+      const date = new Date(dateString);
+      return date.toISOString();
+    }
+
+    async function addCompetition() {
+      const name = document.getElementById('addName').value;
+      const startDate = formatDateToISO(document.getElementById('addStartDate').value);
+      const endDate = formatDateToISO(document.getElementById('addEndDate').value);
+      const participantElements = document.querySelectorAll('#addParticipants input[type="checkbox"]:checked');
+      const athleteIds = Array.from(participantElements).map(checkbox => parseInt(checkbox.value));
+
+      const competition = {
+        name,
+        startDate,
+        endDate,
+        athleteIds
+      };
+
+      const response = await fetch('/competition', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(competition)
+      });
+
+      if (response.ok) {
+        alert('Соревнование добавлено успешно');
+        location.reload();
+      } else {
+        alert('Ошибка при добавлении соревнования');
+      }
+    }
+
+    async function editCompetition() {
+      const nameSelect = document.getElementById('editName');
+      const selectedOption = nameSelect.options[nameSelect.selectedIndex];
+      const id = selectedOption.getAttribute('data-id');
+      const newName = document.getElementById('editNewName').value;
+      const startDate = formatDateToISO(document.getElementById('editStartDate').value);
+      const endDate = formatDateToISO(document.getElementById('editEndDate').value);
+      const participantElements = document.querySelectorAll('#editParticipants input[type="checkbox"]:checked');
+      const athleteIds = Array.from(participantElements).map(checkbox => parseInt(checkbox.value));
+
+      const competition = {
+        newName,
+        startDate,
+        endDate,
+        athleteIds
+      };
+
+      const response = await fetch(`/competition/${id}`, {
+        method: 'PUT',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(competition)
+      });
+
+      if (response.ok) {
+        alert('Соревнование изменено успешно');
+        location.reload();
+      } else {
+        alert('Ошибка при изменении соревнования');
+      }
+    }
+
+    async function deleteCompetition() {
+      const nameSelect = document.getElementById('deleteName');
+      const id = nameSelect.value;
+
+      const response = await fetch(`/competition/${id}`, {
+        method: 'DELETE'
+      });
+
+      if (response.ok) {
+        alert('Соревнование удалено успешно');
+        location.reload();
+      } else {
+        alert('Ошибка при удалении соревнования');
+      }
+    }
+
+    function populateEditForm() {
+      const competitionSelect = document.getElementById('editName');
+      const selectedOption = competitionSelect.options[competitionSelect.selectedIndex];
+
+      document.getElementById('editNewName').value = selectedOption.getAttribute('value');
+      document.getElementById('editStartDate').value = formatDate(selectedOption.getAttribute('data-start-date'));
+      document.getElementById('editEndDate').value = formatDate(selectedOption.getAttribute('data-end-date'));
+    }
+
+    function formatDate(dateString) {
+      date = new Date(dateString)
+      return date.getFullYear() + '-' + fillZero(date.getMonth() + 1) + '-' + fillZero(date.getDate())
+    }
+
+    function fillZero(num) {
+      if (num < 10) return '0' + num;
+      return num;
+    }
+  </script>
 </main>
 {{> footer}}
 </body>
