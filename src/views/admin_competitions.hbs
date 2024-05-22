@@ -33,7 +33,11 @@
       <td class="table__cell">{{this.name}}</td>
       <td class="table__cell">{{formatDate this.startDate}}</td>
       <td class="table__cell">{{formatDate this.endDate}}</td>
-      <td class="table__cell table__cell--participants">{{parseParticipiants this.athleteIds athletes}}</td>
+      <td class="table__cell table__cell--participants">
+        {{#each this.athletes}}
+           <span>{{this.athlete.lastName}} {{this.athlete.firstName}} {{this.athlete.patronymicName}}, {{this.athlete.class}}, {{this.athlete.region}}</span>
+        {{/each}}
+      </td>
     </tr>
     {{/each}}
     </tbody>
@@ -105,9 +109,13 @@
     </div>
   </div>
 
+  <script src="https://www.gstatic.com/firebasejs/8.3.1/firebase-app.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/8.3.1/firebase-auth.js"></script>
+  <script src='/js/auth/main.js'></script>
   <script>
     function openModal(modalId) {
       document.getElementById(modalId).style.display = "flex";
+      populateEditForm()
     }
 
     function closeModal(modalId) {
@@ -153,14 +161,14 @@
       const nameSelect = document.getElementById('editName');
       const selectedOption = nameSelect.options[nameSelect.selectedIndex];
       const id = selectedOption.getAttribute('data-id');
-      const newName = document.getElementById('editNewName').value;
+      const name = document.getElementById('editNewName').value;
       const startDate = formatDateToISO(document.getElementById('editStartDate').value);
       const endDate = formatDateToISO(document.getElementById('editEndDate').value);
       const participantElements = document.querySelectorAll('#editParticipants input[type="checkbox"]:checked');
       const athleteIds = Array.from(participantElements).map(checkbox => parseInt(checkbox.value));
 
       const competition = {
-        newName,
+        name,
         startDate,
         endDate,
         athleteIds

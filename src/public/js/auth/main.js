@@ -9,4 +9,35 @@ const firebaseConfig = {
 };
 
 firebase.initializeApp(firebaseConfig);
-firebase.auth().setPersistence(firebase.auth.Auth.Persistence.NONE);
+firebase.auth().setPersistence(firebase.auth.Auth.Persistence.LOCAL);
+
+let currentEmail = '';
+firebase.auth().onAuthStateChanged((user) => {
+  if (user) {
+    currentEmail = user.email;
+  } else {
+    currentEmail = '';
+  }
+});
+
+const signOutBtn = document.getElementById('sign-out-btn');
+
+signOutBtn.onclick = () => signOut();
+
+function signOut() {
+  firebase
+    .auth()
+    .signOut()
+    .then(
+      function () {
+        console.log('Signed Out');
+        document.cookie = `jwt=; path=/; expires=Thu, 01 Jan 1970 00:00:01 GMT;`;
+        location.reload();
+      },
+      function (error) {
+        console.error('Sign Out Error', error);
+        document.cookie = `jwt=; path=/; expires=Thu, 01 Jan 1970 00:00:01 GMT;`;
+        location.reload();
+      },
+    );
+}

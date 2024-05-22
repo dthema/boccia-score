@@ -35,4 +35,16 @@ export class AthleteService {
   getAll() {
     return this.prisma.athlete.findMany();
   }
+
+  getAllByCompetition(competitionId: number) {
+    return this.prisma.athlete.findMany({
+      where: {
+        competitions: {
+          some: {
+            competitionId: competitionId,
+          },
+        },
+      },
+    });
+  }
 }

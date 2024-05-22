@@ -9,7 +9,7 @@ import { ValidationPipe } from '@nestjs/common';
 import * as cookieParser from 'cookie-parser';
 import { AthleteDto } from './athlete/dto/athlete.dto';
 
-function athleteFullNameString(athlete: AthleteDto) {
+function athleteFullNameString(athlete) {
   if (athlete == undefined) return '';
   return (
     athlete.lastName + ' ' + athlete.firstName + ' ' + athlete.patronymicName
@@ -17,27 +17,13 @@ function athleteFullNameString(athlete: AthleteDto) {
 }
 
 function initHbsHelpers() {
-  hbs.registerHelper(
-    'parseParticipiants',
-    function (athleteIds: number[], athletes: AthleteDto[]) {
-      let response = '';
+  hbs.registerHelper('json', function (obj) {
+    return JSON.stringify(obj);
+  });
 
-      if (athleteIds != undefined && athletes != undefined) {
-        const ids = new Set<number>();
-        athleteIds.forEach((id: number) => {
-          ids.add(id);
-        });
-
-        athletes.forEach((athlete: AthleteDto) => {
-          if (ids.has(athlete.id)) {
-            response += '<span>' + athleteFullNameString(athlete) + '</span>';
-          }
-        });
-      }
-
-      return response;
-    },
-  );
+  hbs.registerHelper('inc', function (num: number) {
+    return num + 1;
+  });
 
   hbs.registerHelper('parseAthleteName', function (athlete: AthleteDto) {
     return athleteFullNameString(athlete);

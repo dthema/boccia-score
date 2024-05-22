@@ -3,7 +3,7 @@
     <ul class="inline-menu__list">
       {{#each headerMenuItems}}
         <li class="inline-menu__item">
-          <a class="inline-menu__link" href="{{this.link}}">{{this.text}}</a>
+          <a class="inline-menu__link" {{#if this.id}}id="{{this.id}}"{{/if}} href="{{this.link}}">{{this.text}}</a>
         </li>
       {{/each}}
     </ul>

@@ -1,4 +1,5 @@
 import {
+  BadRequestException,
   Body,
   Controller,
   Delete,
@@ -42,6 +43,9 @@ export class GameController {
   @ApiOkResponse({ type: GameDto })
   @ApiBody({ type: GameRequestDto })
   async addGame(@Body() gameData: GameRequestDto): Promise<GameDto> {
+    if (gameData.blueAthleteId == gameData.redAthleteId) {
+      throw new BadRequestException('Выберите различных игроков');
+    }
     return new GameDto(
       await this.gameService.add(this.getDataFromDto(gameData)),
     );
@@ -54,6 +58,9 @@ export class GameController {
     @Param('id', ParseIntPipe) id: number,
     @Body() gameData: GameRequestDto,
   ): Promise<GameDto> {
+    if (gameData.blueAthleteId == gameData.redAthleteId) {
+      throw new BadRequestException('Выберите различных игроков');
+    }
     return new GameDto(
       await this.gameService.update({
         id,

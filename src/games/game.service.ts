@@ -2,6 +2,7 @@ import { Injectable } from '@nestjs/common';
 import { PrismaService } from '../prisma.service';
 import { Prisma } from '@prisma/client';
 import { GameEntity } from './entity/game.entity';
+import { $Enums } from '.prisma/client';
 
 @Injectable()
 export class GameService {
@@ -48,6 +49,37 @@ export class GameService {
     });
   }
 
+  getAllByCompetition(competitionId: number): Promise<GameEntity[]> {
+    return this.prisma.game.findMany({
+      where: {
+        competitionId: competitionId,
+      },
+      include: this.defaultInclude,
+    });
+  }
+
+  getAllByStatus(status: $Enums.GameStatus): Promise<GameEntity[]> {
+    return this.prisma.game.findMany({
+      where: {
+        status: status,
+      },
+      include: this.defaultInclude,
+    });
+  }
+
+  getAllByCompetitionAndStatus(
+    competitionId: number,
+    status: $Enums.GameStatus,
+  ): Promise<GameEntity[]> {
+    return this.prisma.game.findMany({
+      where: {
+        competitionId: competitionId,
+        status: status,
+      },
+      include: this.defaultInclude,
+    });
+  }
+
   private defaultInclude = {
     redAthlete: {
       select: {
@@ -55,6 +87,7 @@ export class GameService {
         firstName: true,
         lastName: true,
         patronymicName: true,
+        region: true,
       },
     },
     blueAthlete: {
@@ -63,6 +96,7 @@ export class GameService {
         firstName: true,
         lastName: true,
         patronymicName: true,
+        region: true,
       },
     },
     competition: {

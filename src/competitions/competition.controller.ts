@@ -1,4 +1,5 @@
 import {
+  BadRequestException,
   Body,
   Controller,
   Delete,
@@ -50,12 +51,19 @@ export class CompetitionController {
   async addCompetition(
     @Body() competitionData: CompetitionRequestDto,
   ): Promise<CompetitionDto> {
+    if (
+      new Date(competitionData.startDate) > new Date(competitionData.endDate)
+    ) {
+      throw new BadRequestException(
+        'Дата создания должна быть меньше даты закрытия',
+      );
+    }
     return new CompetitionDto(
       await this.competitionService.add(this.getDataFromDto(competitionData)),
     );
   }
 
-  @Put('competition/:id')
+  @Put('/competition/:id')
   @ApiOkResponse({ type: CompetitionDto })
   @ApiBody({ type: CompetitionRequestDto })
   @Auth('ADMIN')
@@ -63,6 +71,13 @@ export class CompetitionController {
     @Param('id', ParseIntPipe) id: number,
     @Body() competitionData: CompetitionRequestDto,
   ): Promise<CompetitionDto> {
+    if (
+      new Date(competitionData.startDate) > new Date(competitionData.endDate)
+    ) {
+      throw new BadRequestException(
+        'Дата создания должна быть меньше даты закрытия',
+      );
+    }
     return new CompetitionDto(
       await this.competitionService.update({
         id,

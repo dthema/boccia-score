@@ -1,0 +1,292 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <meta name="keywords" content="бочча,счёт,спорт">
+  <meta name="description" content="Страница с предыдущими соревнованиями по Бочча">
+  <script src="https://cdn.socket.io/4.3.2/socket.io.min.js" integrity="sha384-KAZ4DtjNhLChOB/hxXuKqhMLYvx3b5MlT55xPEiNmREKRzeEm+RVPlTnAn0ajQNs" crossorigin="anonymous"></script>
+  {{#each styles}}
+    <link href="{{cssPath}}" rel="stylesheet">
+  {{/each}}
+  {{#each scripts}}
+    <script src="{{jsPath}}"></script>
+  {{/each}}
+  <title>Выбор соревнования</title>
+</head>
+<body>
+{{> header}}
+<main class="main edit-page">
+  <div class="button-container">
+    <button class="button button--add" onclick="openModal('addModal')">Добавить</button>
+    <button class="button button--edit" onclick="openModal('editModal')">Изменить</button>
+    <button class="button button--delete" onclick="openModal('deleteModal')">Удалить</button>
+  </div>
+  <table class="table">
+    <thead class="table__header">
+    <tr class="table__row">
+      <th class="table__cell">ID</th>
+      <th class="table__cell">Класс</th>
+      <th class="table__cell">Статус</th>
+      <th class="table__cell">Очки Красных</th>
+      <th class="table__cell">Очки Синих</th>
+      <th class="table__cell">Раунд</th>
+      <th class="table__cell">Красный игрок</th>
+      <th class="table__cell">Синий игрок</th>
+    </tr>
+    </thead>
+    <tbody class="table__body" id="gameTableBody">
+    {{#each games}}
+      <tr class="table__row">
+        <td class="table__cell">{{this.id}}</td>
+        <td class="table__cell">{{this.class}}</td>
+        <td class="table__cell">{{this.status}}</td>
+        <td class="table__cell">{{this.redScore}}</td>
+        <td class="table__cell">{{this.blueScore}}</td>
+        <td class="table__cell">{{this.round}}</td>
+        <td class="table__cell">{{parseAthleteName this.redAthlete}}, {{this.redAthlete.region}}</td>
+        <td class="table__cell">{{parseAthleteName this.blueAthlete}}, {{this.blueAthlete.region}}</td>
+      </tr>
+    {{/each}}
+    </tbody>
+  </table>
+
+  <!-- Модальное окно для добавления игры -->
+  <div id="addModal" class="modal">
+    <div class="modal__content">
+      <h2 class="modal__title">Добавить игру</h2>
+      <label class="modal__label" for="addClass">Класс</label>
+      <select class="modal__select" id="addClass" name="class" onchange="updateAthleteOptions('add')">
+        <option value="BC1">BC1</option>
+        <option value="BC2">BC2</option>
+        <option value="BC3">BC3</option>
+        <option value="BC4">BC4</option>
+      </select>
+      <label class="modal__label" for="addStatus">Статус</label>
+      <select class="modal__select" id="addStatus" name="status">
+        <option value="CREATED">CREATED</option>
+        <option value="STARTED">STARTED</option>
+        <option value="FINISHED">FINISHED</option>
+      </select>
+      <label class="modal__label" for="addRedScore">Очки Красных</label>
+      <input class="modal__input" type="number" id="addRedScore" name="redScore">
+      <label class="modal__label" for="addBlueScore">Очки Синих</label>
+      <input class="modal__input" type="number" id="addBlueScore" name="blueScore">
+      <label class="modal__label" for="addRound">Раунд</label>
+      <input class="modal__input" type="number" id="addRound" name="round">
+      <label class="modal__label" for="addRedAthlete">Красный игрок</label>
+      <select class="modal__select" id="addRedAthlete" name="redAthleteId" disabled></select>
+      <label class="modal__label" for="addBlueAthlete">Синий игрок</label>
+      <select class="modal__select" id="addBlueAthlete" name="blueAthleteId" disabled></select>
+      <button class="button button--submit" onclick="addGame()">Добавить</button>
+      <button class="button button--cancel" onclick="closeModal('addModal')">Отмена</button>
+    </div>
+  </div>
+
+  <!-- Модальное окно для изменения игры -->
+  <div id="editModal" class="modal">
+    <div class="modal__content">
+      <h2 class="modal__title">Изменить игру</h2>
+      <label class="modal__label" for="editGame">Выберите игру</label>
+      <select class="modal__select" id="editGame" name="game" onchange="populateEditForm('edit')">
+        {{#each games}}
+          <option value="{{this.id}}">ID: {{this.id}}; {{parseAthleteName this.redAthlete}}, {{this.redAthlete.region}} - {{parseAthleteName this.blueAthlete}}, {{this.blueAthlete.region}}</option>
+        {{/each}}
+      </select>
+      <label class="modal__label" for="editClass">Класс</label>
+      <select class="modal__select" id="editClass" name="class" onchange="updateAthleteOptions('edit')">
+        <option value="BC1">BC1</option>
+        <option value="BC2">BC2</option>
+        <option value="BC3">BC3</option>
+        <option value="BC4">BC4</option>
+      </select>
+      <label class="modal__label" for="editStatus">Статус</label>
+      <select class="modal__select" id="editStatus" name="status">
+        <option value="CREATED">CREATED</option>
+        <option value="STARTED">STARTED</option>
+        <option value="FINISHED">FINISHED</option>
+      </select>
+      <label class="modal__label" for="editRedScore">Очки Красных</label>
+      <input class="modal__input" type="number" id="editRedScore" name="redScore">
+      <label class="modal__label" for="editBlueScore">Очки Синих</label>
+      <input class="modal__input" type="number" id="editBlueScore" name="blueScore">
+      <label class="modal__label" for="editRound">Раунд</label>
+      <input class="modal__input" type="number" id="editRound" name="round">
+      <label class="modal__label" for="editRedAthlete">Красный игрок</label>
+      <select class="modal__select" id="editRedAthlete" name="redAthleteId" disabled></select>
+      <label class="modal__label" for="editBlueAthlete">Синий игрок</label>
+      <select class="modal__select" id="editBlueAthlete" name="blueAthleteId" disabled></select>
+      <button class="button button--submit" onclick="editGame()">Изменить</button>
+      <button class="button button--cancel" onclick="closeModal('editModal')">Отмена</button>
+    </div>
+  </div>
+
+  <!-- Модальное окно для удаления игры -->
+  <div id="deleteModal" class="modal">
+    <div class="modal__content">
+      <h2 class="modal__title">Удалить игру</h2>
+      <label class="modal__label" for="deleteGame">Выберите игру</label>
+      <select class="modal__select" id="deleteGame" name="game">
+        {{#each games}}
+          <option value="{{this.id}}">ID: {{this.id}}; {{parseAthleteName this.redAthlete}}, {{this.redAthlete.region}} - {{parseAthleteName this.blueAthlete}}, {{this.blueAthlete.region}}</option>
+        {{/each}}
+      </select>
+      <button class="button button--submit" onclick="deleteGame()">Удалить</button>
+      <button class="button button--cancel" onclick="closeModal('deleteModal')">Отмена</button>
+    </div>
+  </div>
+
+</main>
+{{> footer}}
+<script src="https://www.gstatic.com/firebasejs/8.3.1/firebase-app.js"></script>
+<script src="https://www.gstatic.com/firebasejs/8.3.1/firebase-auth.js"></script>
+<script src='/js/auth/main.js'></script>
+<script>
+  const socket = io('/');
+
+  function openModal(modalId) {
+    document.getElementById(modalId).style.display = "flex";
+    populateEditForm(modalId.split('Modal')[0])
+  }
+
+  function closeModal(modalId) {
+    document.getElementById(modalId).style.display = "none";
+  }
+
+  function updateAthleteOptions(action) {
+    const gameClass = document.getElementById(`${action}Class`).value;
+    const redAthleteSelect = document.getElementById(`${action}RedAthlete`);
+    const blueAthleteSelect = document.getElementById(`${action}BlueAthlete`);
+
+    // Очистить текущие опции
+    redAthleteSelect.innerHTML = '';
+    blueAthleteSelect.innerHTML = '';
+
+    // Добавить новых спортсменов на основе выбранного класса
+    const athletes = {{{json athletes}}};
+    athletes.forEach(athlete => {
+      if (athlete.class === gameClass) {
+        const option = document.createElement('option');
+        option.value = athlete.id;
+        option.textContent = `${athlete.firstName} ${athlete.lastName}`;
+        redAthleteSelect.appendChild(option.cloneNode(true));
+        blueAthleteSelect.appendChild(option);
+      }
+    });
+
+    redAthleteSelect.disabled = false;
+    blueAthleteSelect.disabled = false;
+  }
+
+  async function addGame() {
+    const gameClass = document.getElementById('addClass').value;
+    const status = document.getElementById('addStatus').value;
+    const redScore = parseFloat(document.getElementById('addRedScore').value);
+    const blueScore = parseFloat(document.getElementById('addBlueScore').value);
+    const round = parseFloat(document.getElementById('addRound').value);
+    const redAthleteId = parseInt(document.getElementById('addRedAthlete').value);
+    const blueAthleteId = parseInt(document.getElementById('addBlueAthlete').value);
+
+    const path = window.location.href.split('/');
+    const game = {
+      class: gameClass,
+      status,
+      redScore,
+      blueScore,
+      round,
+      competitionId: Number(path[path.length - 1]),
+      redAthleteId,
+      blueAthleteId
+    };
+
+    const response = await fetch('/game', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify(game)
+    });
+
+    if (response.ok) {
+      socket.emit('games', await response.json())
+      alert('Игра добавлена успешно');
+      location.reload();
+    } else {
+      alert('Ошибка при добавлении игры');
+    }
+  }
+
+  async function populateEditForm(action) {
+    const gameSelect = document.getElementById('editGame');
+    const gameId = gameSelect.value;
+    const game = {{{json games}}}.find(g => g.id == gameId);
+
+    document.getElementById('editClass').value = game.class;
+    document.getElementById('editStatus').value = game.status;
+    document.getElementById('editRedScore').value = game.redScore;
+    document.getElementById('editBlueScore').value = game.blueScore;
+    document.getElementById('editRound').value = game.round;
+
+    updateAthleteOptions(action);
+
+    document.getElementById('editRedAthlete').value = game.redAthleteId;
+    document.getElementById('editBlueAthlete').value = game.blueAthleteId;
+  }
+
+  async function editGame() {
+    const gameSelect = document.getElementById('editGame');
+    const gameId = gameSelect.value;
+    const gameClass = document.getElementById('editClass').value;
+    const status = document.getElementById('editStatus').value;
+    const redScore = parseFloat(document.getElementById('editRedScore').value);
+    const blueScore = parseFloat(document.getElementById('editBlueScore').value);
+    const round = parseFloat(document.getElementById('editRound').value);
+    const redAthleteId = parseInt(document.getElementById('editRedAthlete').value);
+    const blueAthleteId = parseInt(document.getElementById('editBlueAthlete').value);
+
+    const path = window.location.href.split('/');
+    const game = {
+      class: gameClass,
+      status,
+      redScore,
+      blueScore,
+      round,
+      competitionId: Number(path[path.length - 1]),
+      redAthleteId,
+      blueAthleteId
+    };
+
+    const response = await fetch(`/game/${gameId}`, {
+      method: 'PUT',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify(game)
+    });
+
+    if (response.ok) {
+      socket.emit('games', await response.json())
+      alert('Игра изменена успешно');
+      location.reload();
+    } else {
+      alert('Ошибка при изменении игры');
+    }
+  }
+
+  async function deleteGame() {
+    const gameSelect = document.getElementById('deleteGame');
+    const gameId = gameSelect.value;
+
+    const response = await fetch(`/game/${gameId}`, {
+      method: 'DELETE'
+    });
+
+    if (response.ok) {
+      alert('Игра удалена успешно');
+      location.reload();
+    } else {
+      alert('Ошибка при удалении игры');
+    }
+  }
+</script>
+</body>
+</html>

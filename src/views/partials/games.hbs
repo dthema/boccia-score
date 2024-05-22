@@ -6,7 +6,7 @@
   {{/if}}
   <div class="content-box game-box" id="gameList">
     {{#each gameItems}}
-    <a class="content-box__item content-box__link content-box__item_shadowed game-box__item" href="{{this.link}}">
+    <a class="content-box__item content-box__link content-box__item_shadowed game-box__item" id="game-{{this.id}}" href="{{this.link}}">
       <div class="game-box__players">
         <span class="game-box__players__player game-box__players__red">{{this.redAthlete.firstName}} {{this.redAthlete.lastName}}</span>
         <span class="game-box__players__delimiter"> - </span>

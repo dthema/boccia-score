@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  {{#each styles}}
+    <link href="{{cssPath}}" rel="stylesheet">
+  {{/each}}
+  {{#each scripts}}
+    <script src="{{jsPath}}"></script>
+  {{/each}}
+  <title>Управление спортсменами</title>
+</head>
+<body>
+{{> header}}
+<main class="main edit-page">
+  <div class="button-container">
+    <button class="button button--add" onclick="openModal('addModal')">Добавить</button>
+    <button class="button button--delete" onclick="openModal('deleteModal')">Удалить</button>
+  </div>
+  <table class="table">
+    <thead class="table__header">
+    <tr class="table__row">
+      <th class="table__cell">Email</th>
+      <th class="table__cell">Дата создания</th>
+    </tr>
+    </thead>
+    <tbody class="table__body" id="adminTableBody">
+    {{#each admins}}
+      <tr class="table__row">
+        <td class="table__cell">{{this.email}}</td>
+        <td class="table__cell">{{this.creationDate}}</td>
+      </tr>
+    {{/each}}
+    </tbody>
+  </table>
+
+  <!-- Модальное окно для добавления администратора -->
+  <div id="addModal" class="modal">
+    <div class="modal__content">
+      <h2 class="modal__title">Добавить администратора</h2>
+      <label class="modal__label" for="addEmail">Email</label>
+      <input class="modal__input" type="email" id="addEmail" name="email" required>
+      <label class="modal__label" for="addPassword">Пароль</label>
+      <input class="modal__input" type="password" id="addPassword" name="password" required>
+      <button class="button button--submit" onclick="addAdmin()">Добавить</button>
+      <button class="button button--cancel" onclick="closeModal('addModal')">Отмена</button>
+    </div>
+  </div>
+
+  <!-- Модальное окно для удаления администратора -->
+  <div id="deleteModal" class="modal">
+    <div class="modal__content">
+      <h2 class="modal__title">Удалить администратора</h2>
+      <label class="modal__label" for="deleteAdmin">Выберите администратора</label>
+      <select class="modal__select" id="deleteAdmin" name="admin">
+        {{#each admins}}
+          <option value="{{this.email}}">{{this.email}}</option>
+        {{/each}}
+      </select>
+      <button class="button button--submit" onclick="deleteAdmin()">Удалить</button>
+      <button class="button button--cancel" onclick="closeModal('deleteModal')">Отмена</button>
+    </div>
+  </div>
+
+  <script src="https://www.gstatic.com/firebasejs/8.3.1/firebase-app.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/8.3.1/firebase-auth.js"></script>
+  <script src='/js/auth/main.js'></script>
+  <script>
+    function openModal(modalId) {
+      document.getElementById(modalId).style.display = "flex";
+    }
+
+    function closeModal(modalId) {
+      document.getElementById(modalId).style.display = "none";
+    }
+
+    async function addAdmin() {
+      const email = document.getElementById('addEmail').value;
+      const password = document.getElementById('addPassword').value;
+
+      const admin = {
+        email,
+        password,
+      };
+
+      const response = await fetch('/user', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(admin)
+      });
+
+      if (response.ok) {
+        alert('Администратор добавлен успешно');
+        location.reload();
+      } else {
+        alert('Ошибка при добавлении администратора');
+      }
+    }
+
+    async function deleteAdmin() {
+      const adminSelect = document.getElementById('deleteAdmin');
+      const email = adminSelect.value;
+
+      if (email === currentEmail) {
+        alert("Невозможно удалить свой аккаунт")
+        return
+      }
+
+      const admin = {
+        email,
+      };
+
+      const response = await fetch(`/user`, {
+        method: 'DELETE',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(admin)
+      });
+
+      if (response.ok) {
+        alert('Администратор удален успешно');
+        location.reload();
+      } else {
+        alert('Ошибка при удалении администратора');
+      }
+    }
+  </script>
+</main>
+{{> footer}}
+</body>
+</html>

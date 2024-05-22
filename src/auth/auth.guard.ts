@@ -41,15 +41,15 @@ export class AuthGuard implements CanActivate {
       if (
         permissions != undefined &&
         permissions[0] === 'UNAUTHORISED' &&
-        claims.role === 'ADMIN'
+        claims.permissions === 'ADMIN'
       ) {
         response.redirect('/admin');
         return true;
       }
 
       return (
-        (claims.role == 'ADMIN' && permissions == undefined) ||
-        claims.role === permissions[0]
+        (claims.permissions == 'ADMIN' && permissions == undefined) ||
+        claims.permissions === permissions[0]
       );
     } catch (error) {
       console.log(error.message);

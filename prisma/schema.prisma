@@ -63,11 +63,11 @@ model Game {
   id            Int          @id @default(autoincrement())
   class         AthleteClass
   status        GameStatus   @default(CREATED)
-  competition   Competition  @relation(fields: [competitionId], references: [id])
+  competition   Competition  @relation(fields: [competitionId], references: [id], onDelete: Cascade, onUpdate: Cascade)
   competitionId Int
-  redAthlete    Athlete      @relation("GamePlayerRed", fields: [redAthleteId], references: [id])
+  redAthlete    Athlete      @relation("GamePlayerRed", fields: [redAthleteId], references: [id], onDelete: Cascade, onUpdate: Cascade)
   redAthleteId  Int
-  blueAthlete   Athlete      @relation("GamePlayerBlue", fields: [blueAthleteId], references: [id])
+  blueAthlete   Athlete      @relation("GamePlayerBlue", fields: [blueAthleteId], references: [id], onDelete: Cascade, onUpdate: Cascade)
   blueAthleteId Int
   redScore      Int          @default(0)
   blueScore     Int          @default(0)

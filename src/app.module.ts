@@ -9,7 +9,7 @@ import { UserModule } from './user/user.module';
 import { ServeStaticModule } from '@nestjs/serve-static';
 import { join } from 'path';
 import { FirebaseAdmin } from './firebase/firebase.setup';
-import { AuthGuard } from './auth/auth.guard';
+import { WebsocketModule } from './websocket/websocket.module';
 
 @Module({
   imports: [
@@ -21,6 +21,7 @@ import { AuthGuard } from './auth/auth.guard';
     GameModule,
     CompetitionModule,
     UserModule,
+    WebsocketModule,
   ],
   controllers: [AppController],
   providers: [AppService, FirebaseAdmin],

@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { BadRequestException, Injectable } from '@nestjs/common';
 import { PrismaService } from '../prisma.service';
 import { Prisma } from '@prisma/client';
 import { CompetitionEntity } from './entity/competition.entity';
@@ -14,18 +14,26 @@ export class CompetitionService {
     });
   }
 
-  update(params: {
+  async update(params: {
     id: number;
     data: Prisma.CompetitionUpdateInput;
   }): Promise<CompetitionEntity> {
     const { data, id } = params;
-    return this.prisma.competition.update({
-      data,
-      where: {
-        id: id,
-      },
-      include: this.defaultInclude,
-    });
+    const trx = await this.prisma.$transaction([
+      this.prisma.athletesOnCompetition.deleteMany({
+        where: {
+          competitionId: id,
+        },
+      }),
+      this.prisma.competition.update({
+        data,
+        where: {
+          id: id,
+        },
+        include: this.defaultInclude,
+      }),
+    ]);
+    return trx[1];
   }
 
   delete(id: number): Promise<CompetitionEntity> {
@@ -48,10 +56,30 @@ export class CompetitionService {
     });
   }
 
+  getAllBefore(date: Date): Promise<CompetitionEntity[]> {
+    return this.prisma.competition.findMany({
+      where: {
+        endDate: {
+          lt: date,
+        },
+      },
+      include: this.defaultInclude,
+    });
+  }
+
   private defaultInclude = {
     athletes: {
       select: {
         athleteId: true,
+        athlete: {
+          select: {
+            firstName: true,
+            lastName: true,
+            patronymicName: true,
+            region: true,
+            class: true,
+          },
+        },
       },
     },
     games: {

@@ -1,3 +1,6 @@
+import { ApiProperty } from '@nestjs/swagger';
+import { $Enums } from '.prisma/client';
+
 export class CompetitionEntity {
   constructor({ ...data }: Partial<CompetitionEntity>) {
     Object.assign(this, data);
@@ -12,6 +15,13 @@ export class CompetitionEntity {
 }
 
 export class CompetitionAthleteEntity {
+  athlete: {
+    firstName: string;
+    lastName: string;
+    patronymicName?: string | null;
+    region: string;
+    class: $Enums.AthleteClass;
+  };
   athleteId: number;
 }
 
